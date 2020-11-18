@@ -32,29 +32,28 @@ class_name=${2}
 echo "Creating files for ${day}"
 
 destination_main="${PROJECT_ROOT}/src/main/scala/${PACKAGE}/${day}"
-destination_test="${PROJECT_ROOT}/src/test/scala/${PACKAGE}/${day}"
-destination_resources="${PROJECT_ROOT}/src/test/resources/${day}"
 main_class_name="${class_name}.scala"
-test_class_name="${class_name}Test.scala"
 
 if [ -d "${destination_main}" ]; then
   echo "Folder for day ${day} already exists, exiting"
   exit 1
 fi
 
+echo "Creating dev class ${destination_main}/${main_class_name}"
 mkdir "${destination_main}"
 cp ${TEMPLATE_DIR}/MainClass.scala "${destination_main}"/"${main_class_name}"
-echo "Creating dev class ${destination_main}/${main_class_name}"
 
+destination_test="${PROJECT_ROOT}/src/test/scala/${PACKAGE}/${day}"
+test_class_name="${class_name}Test.scala"
+echo "Creating test class ${destination_test}/${test_class_name}"
 mkdir "${destination_test}"
 cp ${TEMPLATE_DIR}/MainClassTest.scala "${destination_test}"/"${test_class_name}"
-echo "Creating test class ${destination_test}/${test_class_name}"
 
+destination_resources="${PROJECT_ROOT}/src/test/resources/${day}"
+echo "Creating input file ${destination_resources}/input.txt"
 mkdir "${destination_resources}"
 touch "${destination_resources}"/input.txt
-echo "Creating input file ${destination_resources}/input.txt"
 
 echo "Updating references inside classes"
-
 sed -i -e "s/\${internal_day}/${day}/" -e "s/\${internal_class_name}/${class_name}/" "${destination_main}"/"${main_class_name}"
 sed -i -e "s/\${internal_day}/${day}/" -e "s/\${internal_class_name}/${class_name}/" "${destination_test}"/"${test_class_name}"
