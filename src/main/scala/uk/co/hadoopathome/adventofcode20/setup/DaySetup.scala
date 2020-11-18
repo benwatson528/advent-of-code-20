@@ -5,7 +5,8 @@ import scala.sys.process.Process
 import scala.util.Using
 
 object DaySetup extends App {
-  val day = 1.toString
+  println("Please enter a day to be setup:")
+  val day = scala.io.StdIn.readInt().toString
   val puzzleUrl = "https://adventofcode.com/2020/day/" + day
   val puzzleName = getPuzzleName(puzzleUrl)
 
