@@ -1,10 +1,10 @@
-package uk.co.hadoopathome.adventofcode19.${internal_day}
+package uk.co.hadoopathome.adventofcode20.${internal_day}
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import scala.io.Source
 
-class ${internal_class_name}Test extends FunSuite {
+class ${internal_class_name}Test extends AnyFunSuite {
   test("sumNumbers +1, +1, +1") {
     val input = List(1, 1, 1)
     assert(${internal_class_name}.sumNumbers(input) === 3)

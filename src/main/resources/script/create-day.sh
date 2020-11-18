@@ -12,7 +12,7 @@
 
 cd $(dirname "$0") || exit
 
-PACKAGE="uk/co/hadoopathome/adventofcode19"
+PACKAGE="uk/co/hadoopathome/adventofcode20"
 TEMPLATE_DIR="../templates"
 PROJECT_ROOT="../../../.."
 
@@ -22,8 +22,7 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
-unformatted_day=${1}
-printf -v formatted_day "%02d" "${unformatted_day}"
+printf -v formatted_day "%02d" "${1}"
 day="day${formatted_day}"
 
 class_name=${2}
@@ -37,7 +36,7 @@ main_class_name="${class_name}.scala"
 test_class_name="${class_name}Test.scala"
 
 if [ -d "${destination_main}" ]; then
-  echo "Folder already exists, exiting"
+  echo "Folder for day ${day} already exists, exiting"
   exit 1
 fi
 
