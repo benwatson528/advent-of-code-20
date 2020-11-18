@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Creates the Scala packages and templated classes for a given day's problem.
+#
 # TO RUN:
 # ```
 #create-day.sh <DAY> <CLASS_NAME>
