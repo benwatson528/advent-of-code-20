@@ -1,3 +1,3 @@
-# advent-of-code-20
+## Advent of Code 20
 
-https://adventofcode.com/2020 (my annual attempt at using Scala)
+https://adventofcode.com/2020 - this time in Python.
