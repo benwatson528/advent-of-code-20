@@ -1,9 +1,9 @@
-import os
-from pathlib import Path
 import re
 import sys
 import urllib.request
 from urllib.error import URLError
+
+from setup import file_creator
 
 BASE_URL = "https://adventofcode.com/2019/day/"
 
@@ -27,19 +27,10 @@ def get_puzzle_name(puzzle_url):
         sys.exit(e.reason)
 
 
-def create_file(file_name, day_number, file_type, contents=None):
-    script_dir = os.path.dirname(__file__)
-    file_dir = os.path.join(script_dir, "..", file_type, f"day{day_number:02d}")
-    os.makedirs(file_dir, exist_ok=True)
-    file_path = os.path.join(script_dir, file_dir, file_name)
-    print(f"Creating file {file_path}")
-    with open(file_path, "w") as f:
-        if contents:
-            f.write(contents)
-
-
 day = int(input("Please enter a day to be setup: "))
 puzzle_name = get_puzzle_name(f"{BASE_URL}{day}")
 print(f"Puzzle name: {puzzle_name}")
-create_file(f"{puzzle_name}.py", day, "main")
-create_file(f"test_{puzzle_name}.py", day, "test", f"from main.day{day:02d}.{puzzle_name} import solve")
+file_creator.create_python_file(f"{puzzle_name}.py", day, "main")
+file_creator.create_python_file(f"test_{puzzle_name}.py", day, "test",
+                                f"from main.day{day:02d}.{puzzle_name} import solve")
+file_creator.create_data_file(day)
