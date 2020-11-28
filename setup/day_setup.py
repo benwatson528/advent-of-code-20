@@ -27,10 +27,15 @@ def get_puzzle_name(puzzle_url):
         sys.exit(e.reason)
 
 
+def read_template_file(template_file_name):
+    return open(f"templates/{template_file_name}_template.txt").read()
+
+
 day = int(input("Please enter a day to be setup: "))
 puzzle_name = get_puzzle_name(f"{BASE_URL}{day}")
 print(f"Puzzle name: {puzzle_name}")
-file_creator.create_python_file(f"{puzzle_name}.py", day, "main")
+
+file_creator.create_python_file(f"{puzzle_name}.py", day, "main", read_template_file("main"))
 file_creator.create_python_file(f"test_{puzzle_name}.py", day, "test",
-                                f"from main.day{day:02d}.{puzzle_name} import solve")
+                                read_template_file("test").format(day=day, puzzle_name=puzzle_name))
 file_creator.create_data_file(day)

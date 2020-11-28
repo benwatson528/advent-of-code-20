@@ -1,0 +1,6 @@
+from main.day{day:02d}.{puzzle_name} import solve
+
+
+def test_simple():
+    lines = open("data/input.txt").read().split('\n')
+    assert solve(1, 2) == 3
