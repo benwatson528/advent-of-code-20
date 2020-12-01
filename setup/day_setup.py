@@ -38,4 +38,5 @@ print(f"Puzzle name: {puzzle_name}")
 file_creator.create_python_file(f"{puzzle_name}.py", day, "main", read_template_file("main"))
 file_creator.create_python_file(f"test_{puzzle_name}.py", day, "test",
                                 read_template_file("test").format(day=day, puzzle_name=puzzle_name))
-file_creator.create_data_file(day)
+file_creator.create_data_file(day, "test_input.txt")
+file_creator.create_data_file(day, "input.txt")

@@ -1,8 +1,10 @@
+import os
+import sys
 from main.day01.report_repair import solve
 
 
 def test_simple():
-    f = open("data/test_input.txt")
+    f = open(os.path.join(sys.path[0], "data/test_input.txt"))
     lines = []
     for line in f:
         lines.append(int(line.strip('\n')))
@@ -10,7 +12,7 @@ def test_simple():
 
 
 def test_part_1():
-    f = open("data/input.txt")
+    f = open(os.path.join(sys.path[0], "data/input.txt"))
     lines = []
     for line in f:
         lines.append(int(line.strip('\n')))

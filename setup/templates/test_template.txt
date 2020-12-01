@@ -1,6 +1,18 @@
+import os
+import sys
 from main.day{day:02d}.{puzzle_name} import solve
 
 
 def test_simple():
-    lines = open("data/input.txt").read().split('\n')
+    f = open(os.path.join(sys.path[0], "data/test_input.txt"))
+    lines = []
+    for line in f:
+        lines.append(int(line.strip('\n')))
+    assert solve(1, 2) == 3
+
+def test_real():
+    f = open(os.path.join(sys.path[0], "data/input.txt"))
+    lines = []
+    for line in f:
+        lines.append(int(line.strip('\n')))
     assert solve(1, 2) == 3
