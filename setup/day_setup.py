@@ -5,7 +5,7 @@ from urllib.error import URLError
 
 from setup import file_creator
 
-BASE_URL = "https://adventofcode.com/2019/day/"
+BASE_URL = "https://adventofcode.com/2020/day/"
 
 
 def get_puzzle_name(puzzle_url):
