@@ -6,8 +6,8 @@ def create_python_file(file_name, day_number, file_type, contents=None):
     create_file(file_name, path_components, contents)
 
 
-def create_data_file(day_number, file_name):
-    path_components = ["..", "test", f"day{day_number:02d}", "data"]
+def create_test_data_file(day_number, file_name):
+    path_components = ["..", "tests", f"day{day_number:02d}", "data"]
     create_file(file_name, path_components)
 
 
