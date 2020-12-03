@@ -1,5 +1,6 @@
 import os
-import sys
+from pathlib import Path
+
 from main.day02.password_philosophy import validate_occurrences, validate_positions
 from main.day02.policy import Policy
 
@@ -25,7 +26,7 @@ def test_positions_real():
 
 
 def read_input(file_name):
-    f = open(os.path.join(sys.path[0], file_name))
+    f = open(os.path.join(Path(__file__).parent.absolute(), file_name))
     password_db = []
     for line in f:
         split_line = line.strip('\n').split(' ')

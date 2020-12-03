@@ -1,4 +1,4 @@
-from policy import Policy
+from main.day02.policy import Policy
 
 
 def is_valid_password_occurrence(policy_password: (Policy, str)) -> bool:

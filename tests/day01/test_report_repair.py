@@ -1,5 +1,6 @@
 import os
-import sys
+from pathlib import Path
+
 from main.day01.report_repair import solve_two, solve_three
 
 
@@ -24,7 +25,7 @@ def test_part_2():
 
 
 def read_input(file_name):
-    f = open(os.path.join(sys.path[0], file_name))
+    f = open(os.path.join(Path(__file__).parent.absolute(), file_name))
     lines = []
     for line in f:
         lines.append(int(line.strip('\n')))

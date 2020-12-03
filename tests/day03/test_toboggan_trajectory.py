@@ -1,6 +1,7 @@
 import os
-import sys
 from functools import reduce
+from pathlib import Path
+
 from main.day03.toboggan_trajectory import solve
 
 
@@ -29,7 +30,7 @@ def iterate_multiple(grid):
 
 
 def read_input(file_name):
-    f = open(os.path.join(sys.path[0], file_name))
+    f = open(os.path.join(Path(__file__).parent.absolute(), file_name))
     lines = []
     for line in f:
         lines.append(line.strip('\n'))
