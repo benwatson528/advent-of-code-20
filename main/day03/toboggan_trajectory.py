@@ -23,7 +23,7 @@ def solve(g: List[str], right_steps: int, down_steps: int) -> int:
     grid_height = len(g)
     num_trees_hit = 0
     position = (0, 0)
-    while position[1] <= len(grid):
+    while position[1] <= grid_height:
         #  draw_grid(position)
         position = move(position, right_steps, down_steps)
     return num_trees_hit
