@@ -17,10 +17,11 @@ def move(current_position: Position, right_steps: int, down_steps: int) -> Posit
 
 
 def solve(g: List[str], right_steps: int, down_steps: int) -> int:
-    global grid, grid_width, grid_height
+    global grid, grid_width, grid_height, num_trees_hit
     grid = g
     grid_width = len(g[0])
     grid_height = len(g)
+    num_trees_hit = 0
     position = (0, 0)
     while position[1] <= len(grid):
         #  draw_grid(position)
