@@ -30,8 +30,8 @@ def iterate_multiple(grid):
 
 
 def read_input(file_name):
-    f = open(os.path.join(Path(__file__).parent.absolute(), file_name))
-    lines = []
-    for line in f:
-        lines.append(line.strip('\n'))
-    return lines
+    with open(os.path.join(Path(__file__).parent.absolute(), file_name)) as f:
+        lines = []
+        for line in f:
+            lines.append(line.strip('\n'))
+        return lines

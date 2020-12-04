@@ -26,12 +26,12 @@ def test_positions_real():
 
 
 def read_input(file_name):
-    f = open(os.path.join(Path(__file__).parent.absolute(), file_name))
-    password_db = []
-    for line in f:
-        split_line = line.strip('\n').split(' ')
-        policy_bounds = split_line[0].split('-')
-        policy_letter = split_line[1][0]
-        password = split_line[2]
-        password_db.append((Policy(int(policy_bounds[0]), int(policy_bounds[1]), policy_letter), password))
-    return password_db
+    with open(os.path.join(Path(__file__).parent.absolute(), file_name)) as f:
+        password_db = []
+        for line in f:
+            split_line = line.strip('\n').split(' ')
+            policy_bounds = split_line[0].split('-')
+            policy_letter = split_line[1][0]
+            password = split_line[2]
+            password_db.append((Policy(int(policy_bounds[0]), int(policy_bounds[1]), policy_letter), password))
+        return password_db
