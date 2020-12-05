@@ -16,6 +16,23 @@ def test_real():
     assert max(map(lambda x: solve(x).seat_id, read_input("data/input.txt"))) == 915
 
 
+def test_find_missing_seat():
+    seats = map(lambda x: solve(x), read_input("data/input.txt"))
+    seats = {(x.row, x.column): x.seat_id for x in seats}
+    assert find_missing_seat_id(seats) == 699
+
+
+def find_missing_seat_id(seats):
+    seat_ids = seats.values()
+    for i in range(128):
+        for j in range(8):
+            if not (i, j) in seats:
+                seat_id = (i * 8) + j
+                if seat_id - 1 in seat_ids and seat_id + 1 in seat_ids:
+                    return seat_id
+    return None
+
+
 def read_input(file_name):
     with open(os.path.join(Path(__file__).parent.absolute(), file_name)) as f:
         lines = []
