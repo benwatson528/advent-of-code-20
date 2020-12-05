@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from pytest import fail
+
 from main.day05.seat import Seat
 from main.day05.binary_boarding import solve
 
@@ -30,7 +32,7 @@ def find_missing_seat_id(seats):
                 seat_id = (i * 8) + j
                 if seat_id - 1 in seat_ids and seat_id + 1 in seat_ids:
                     return seat_id
-    return None
+    fail
 
 
 def read_input(file_name):
