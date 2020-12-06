@@ -32,7 +32,7 @@ def find_missing_seat_id(seats):
                 seat_id = (i * 8) + j
                 if seat_id - 1 in seat_ids and seat_id + 1 in seat_ids:
                     return seat_id
-    fail
+    fail("Unable to find a missing seat")
 
 
 def read_input(file_name):
