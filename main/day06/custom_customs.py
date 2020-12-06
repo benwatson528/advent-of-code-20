@@ -2,11 +2,11 @@ from collections import Counter
 from typing import List
 
 
-def find_anyone_response(groups: List[List[str]]):
+def find_anyone_response(groups: List[List[str]]) -> int:
     return sum(map(lambda x: len(''.join(set(''.join(x)))), groups))
 
 
-def find_everyone_response(groups: List[List[str]]):
+def find_everyone_response(groups: List[List[str]]) -> int:
     everyone_responses = 0
     for group in groups:
         combined_counts = sum(map(lambda x: Counter(x), group), Counter())
