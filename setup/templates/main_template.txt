@@ -1,2 +1,2 @@
-def solve(x, y):
+def solve(x, y) -> int:
     return x + y

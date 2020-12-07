@@ -13,7 +13,7 @@ def get_puzzle_name(puzzle_url):
     Finds the name of the given day's puzzle and formats it into a string that can be used for a Python class by
     lower-casing and replacing spaces with underscores. If the resulting string starts with a number, "a_" is added as a
     prefix.
-    :param puzzle_url: the URL of the given day"s puzzle
+    :param puzzle_url: the URL of the given day's puzzle
     :return: the puzzle name
     """
     try:
