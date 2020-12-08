@@ -5,13 +5,11 @@ from main.day{day:02d}.{puzzle_name} import solve
 
 
 def test_simple():
-    lines = read_input("data/test_input.txt")
-    assert solve(1, 2) == 3
+    assert solve(read_input("data/test_input.txt")) == 3
 
 
 def test_real():
-    lines = read_input("data/input.txt")
-    assert solve(1, 2) == 3
+    assert solve(read_input("data/input.txt")) == 3
 
 
 def read_input(file_name):

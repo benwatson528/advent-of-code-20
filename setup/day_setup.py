@@ -1,6 +1,7 @@
 import re
 import sys
 import urllib.request
+from datetime import datetime
 from urllib.error import URLError
 
 from setup import file_creator
@@ -31,7 +32,8 @@ def read_template_file(template_file_name):
     return open(f"templates/{template_file_name}_template.txt").read()
 
 
-day = int(input("Please enter a day to be setup: "))
+date = datetime.today().strftime('%d %B %Y')
+day = int(input(f"Please enter a day to be setup (today is {date}): "))
 puzzle_name = get_puzzle_name(f"{BASE_URL}{day}")
 print(f"Puzzle name: {puzzle_name}")
 
