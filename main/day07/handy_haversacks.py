@@ -41,7 +41,7 @@ def find_gold_bag_contents(bags, current_bag, num_bags):
 def parse_statements(bags, index, statements):
     for statement in statements:
         split_statement = statement.split(" contain ")
-        parent_bag = re.search(r"(.+?) bag[s]?$", split_statement[0]).group(1)
+        parent_bag = re.search(r"(.+?) bags?$", split_statement[0]).group(1)
         child_bags = []
         for child_bag in split_statement[1].split(", "):
             child_bag = parse_child_bag_details(child_bag)
