@@ -31,15 +31,18 @@ def fix(instructions: List[Instruction]) -> (int, bool):
     for i in range(len(instructions)):
         instruction = instructions[i]
         if instruction.operation == Operation.jmp:
-            updated_instructions = copy.deepcopy(instructions)
-            updated_instructions[i] = Instruction(Operation.nop, 0)
-            output = solve(updated_instructions)
+            output = run_with_updated_command(i, Operation.nop, instructions)
         elif instruction.operation == Operation.nop:
-            updated_instructions = copy.deepcopy(instructions)
-            updated_instructions[i] = Instruction(Operation.jmp, instruction.argument)
-            output = solve(updated_instructions)
+            output = run_with_updated_command(i, Operation.jmp, instructions)
         else:
             continue
 
         if output[1]:
             return output
+
+
+def run_with_updated_command(idx, new_op, instructions):
+    instruction = instructions[idx]
+    updated_instructions = copy.deepcopy(instructions)
+    updated_instructions[idx] = Instruction(new_op, instruction.argument)
+    return solve(updated_instructions)
