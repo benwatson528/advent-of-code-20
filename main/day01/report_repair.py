@@ -12,6 +12,7 @@ def solve_two(nums: List[int], target: int):
             if n * 2 == target and counts[n] < 2:
                 continue
             return n * (target - n)
+    return None
 
 
 def solve_three(nums: List[int], target: int):
