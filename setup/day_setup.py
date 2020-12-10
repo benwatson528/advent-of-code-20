@@ -25,15 +25,19 @@ def get_puzzle_name(puzzle_url):
             parsed_puzzle_name = "a_" + raw_puzzle_name if raw_puzzle_name[0].isnumeric() else raw_puzzle_name
             return parsed_puzzle_name.lower().replace(" ", "_")
     except URLError as e:
-        sys.exit(e.reason)
+        sys.exit(f"Could not get puzzle at {puzzle_url}: {e.reason}")
 
 
 def read_template_file(template_file_name):
     return open(f"templates/{template_file_name}_template.txt").read()
 
 
-date = datetime.today().strftime('%d %B %Y')
-day = int(input(f"Please enter a day to be setup (today is {date}): "))
+date = datetime.today().strftime('%d')
+use_current_day = input(f"Do you want to create files for today (day {date})? ([y]/n): ") or "y"
+if use_current_day.lower() == "y":
+    day = int(date)
+else:
+    day = int(input(f"Please enter a day to be setup (today is day {date}): "))
 puzzle_name = get_puzzle_name(f"{BASE_URL}{day}")
 print(f"Puzzle name: {puzzle_name}")
 
