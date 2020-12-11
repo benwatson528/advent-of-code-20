@@ -66,18 +66,18 @@ def count_visible_tiles(empty_seats: Set, occupied_seats: Set, coords: (int, int
                         threshold: int) -> bool:
     x, y = coords
     num_tiles = 0
-    num_tiles += walk_right(empty_seats, occupied_seats, max_x, x, y)
+    num_tiles += walk_right(empty_seats, occupied_seats, x, y)
     num_tiles += walk_left(empty_seats, occupied_seats, x, y)
     num_tiles += walk_down(empty_seats, occupied_seats, x, y)
-    num_tiles += walk_up(empty_seats, occupied_seats, max_y, x, y)
-    num_tiles += walk_diagonally_down_left(empty_seats, occupied_seats, max_x, max_y, x, y)
-    num_tiles += walk_diagonally_down_right(empty_seats, occupied_seats, max_x, x, y)
-    num_tiles += walk_diagonally_up_left(empty_seats, occupied_seats, max_y, x, y)
+    num_tiles += walk_up(empty_seats, occupied_seats, x, y)
+    num_tiles += walk_diagonally_down_left(empty_seats, occupied_seats, x, y)
+    num_tiles += walk_diagonally_down_right(empty_seats, occupied_seats, x, y)
+    num_tiles += walk_diagonally_up_left(empty_seats, occupied_seats, x, y)
     num_tiles += walk_diagonally_up_right(empty_seats, occupied_seats, x, y)
     return equality_operator(num_tiles, threshold)
 
 
-def walk_right(empty_seats, occupied_seats, max_x, x, y):
+def walk_right(empty_seats, occupied_seats, x, y):
     for i in range(x + 1, max_x + 1):
         if (i, y) in empty_seats:
             return 0
@@ -104,7 +104,7 @@ def walk_down(empty_seats, occupied_seats, x, y):
     return 0
 
 
-def walk_up(empty_seats, occupied_seats, max_y, x, y):
+def walk_up(empty_seats, occupied_seats, x, y):
     for j in range(y + 1, max_y + 1):
         if (x, j) in empty_seats:
             return 0
@@ -113,7 +113,7 @@ def walk_up(empty_seats, occupied_seats, max_y, x, y):
     return 0
 
 
-def walk_diagonally_down_left(empty_seats, occupied_seats, max_x, max_y, x, y):
+def walk_diagonally_down_left(empty_seats, occupied_seats, x, y):
     i = x + 1
     j = y + 1
     while i < max_x + 1 and j < max_y + 1:
@@ -126,7 +126,7 @@ def walk_diagonally_down_left(empty_seats, occupied_seats, max_x, max_y, x, y):
     return 0
 
 
-def walk_diagonally_down_right(empty_seats, occupied_seats, max_x, x, y):
+def walk_diagonally_down_right(empty_seats, occupied_seats, x, y):
     i = x + 1
     j = y - 1
     while i < max_x + 1 and j >= 0:
@@ -139,7 +139,7 @@ def walk_diagonally_down_right(empty_seats, occupied_seats, max_x, x, y):
     return 0
 
 
-def walk_diagonally_up_left(empty_seats, occupied_seats, max_y, x, y):
+def walk_diagonally_up_left(empty_seats, occupied_seats, x, y):
     i = x - 1
     j = y + 1
     while i >= 0 and j < max_y + 1:
