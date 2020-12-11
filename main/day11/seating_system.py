@@ -8,16 +8,17 @@ max_y = 0
 
 
 def solve_adjacent(empty_seats: Set, occupied_seats: Set) -> int:
+    set_grid_bounds(empty_seats, occupied_seats)
     return solve(empty_seats, occupied_seats, count_adjacent_tiles, 4)
 
 
 def solve_visible(empty_seats: Set, occupied_seats: Set) -> int:
+    set_grid_bounds(empty_seats, occupied_seats)
     return solve(empty_seats, occupied_seats, count_visible_tiles, 5)
 
 
 def solve(empty_seats: Set, occupied_seats: Set, adjacency_function: AdjacencyFunction,
           empty_threshold: int) -> int:
-    set_grid_bounds(empty_seats, occupied_seats)
     updated_empty_seats, updated_occupied_seats = update_grid(empty_seats, occupied_seats, adjacency_function,
                                                               empty_threshold)
     if updated_empty_seats == empty_seats and updated_occupied_seats == occupied_seats:
