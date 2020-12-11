@@ -1,10 +1,10 @@
-from typing import List, Optional
+from typing import List, Optional, Callable
 
 Grid = List[str]
 
 
 def solve(grid: Grid) -> int:
-    updated_grid = update_grid(grid)
+    updated_grid = update_grid(grid, count_adjacent_tiles)
     if updated_grid == grid:
         tiles = count_all_tiles(updated_grid, '#')
         return tiles
@@ -12,15 +12,15 @@ def solve(grid: Grid) -> int:
         return solve(updated_grid)
 
 
-def update_grid(grid: Grid) -> List[str]:
+def update_grid(grid: Grid, adjacency_function: Callable[[Grid, str, int, int], int]) -> List[str]:
     updated_grid = []
     for i in range(len(grid)):
         updated_grid.append("")
         for j in range(len(grid[0])):
             current_tile = grid[i][j]
-            if current_tile == 'L' and count_adjacent_tiles(grid, '#', i, j) == 0:
+            if current_tile == 'L' and adjacency_function(grid, '#', i, j) == 0:
                 updated_grid[i] += '#'
-            elif current_tile == '#' and count_adjacent_tiles(grid, '#', i, j) >= 4:
+            elif current_tile == '#' and adjacency_function(grid, '#', i, j) >= 4:
                 updated_grid[i] += 'L'
             else:
                 updated_grid[i] += current_tile
