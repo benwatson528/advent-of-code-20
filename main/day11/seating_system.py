@@ -3,6 +3,9 @@ from typing import Callable, Set
 
 AdjacencyFunction = Callable
 
+max_x = 0
+max_y = 0
+
 
 def solve_adjacent(empty_seats: Set, occupied_seats: Set) -> int:
     return solve(empty_seats, occupied_seats, count_adjacent_tiles, 4)
@@ -14,12 +17,20 @@ def solve_visible(empty_seats: Set, occupied_seats: Set) -> int:
 
 def solve(empty_seats: Set, occupied_seats: Set, adjacency_function: AdjacencyFunction,
           empty_threshold: int) -> int:
+    set_grid_bounds(empty_seats, occupied_seats)
     updated_empty_seats, updated_occupied_seats = update_grid(empty_seats, occupied_seats, adjacency_function,
                                                               empty_threshold)
     if updated_empty_seats == empty_seats and updated_occupied_seats == occupied_seats:
         return len(updated_occupied_seats)
     else:
         return solve(updated_empty_seats, updated_occupied_seats, adjacency_function, empty_threshold)
+
+
+def set_grid_bounds(empty_seats: Set, occupied_seats: Set):
+    global max_x
+    global max_y
+    max_x = max(set(map(lambda x: x[0], empty_seats)).union(set(map(lambda x: x[0], occupied_seats))))
+    max_y = max(set(map(lambda x: x[1], empty_seats)).union(set(map(lambda x: x[1], occupied_seats))))
 
 
 def update_grid(empty_seats: Set, occupied_seats: Set, adjacency_function: AdjacencyFunction,
@@ -55,7 +66,6 @@ def count_visible_tiles(empty_seats: Set, occupied_seats: Set, coords: (int, int
                         threshold: int) -> bool:
     x, y = coords
     num_tiles = 0
-    max_x, max_y = get_grid_bounds(empty_seats, occupied_seats)
     num_tiles += walk_right(empty_seats, occupied_seats, max_x, x, y)
     num_tiles += walk_left(empty_seats, occupied_seats, x, y)
     num_tiles += walk_down(empty_seats, occupied_seats, x, y)
@@ -70,7 +80,7 @@ def count_visible_tiles(empty_seats: Set, occupied_seats: Set, coords: (int, int
 def walk_right(empty_seats, occupied_seats, max_x, x, y):
     for i in range(x + 1, max_x + 1):
         if (i, y) in empty_seats:
-            break
+            return 0
         elif (i, y) in occupied_seats:
             return 1
     return 0
@@ -153,9 +163,3 @@ def walk_diagonally_up_right(empty_seats, occupied_seats, x, y):
         i -= 1
         j -= 1
     return 0
-
-
-def get_grid_bounds(empty_seats: Set, occupied_seats: Set):
-    max_x = max(set(map(lambda x: x[0], empty_seats)).union(set(map(lambda x: x[0], occupied_seats))))
-    max_y = max(set(map(lambda x: x[1], empty_seats)).union(set(map(lambda x: x[1], occupied_seats))))
-    return max_x, max_y

@@ -38,7 +38,6 @@ def test_visible_simple():
     assert solve_visible(empty_seats, occupied_seats) == 26
 
 
-@pytest.mark.skip(reason="This takes fifteen minutes to complete")
 def test_visible_real():
     empty_seats, occupied_seats = read_input("data/input.txt")
     assert solve_visible(empty_seats, occupied_seats) == 2214
