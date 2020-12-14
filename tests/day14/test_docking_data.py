@@ -3,16 +3,24 @@ import re
 from pathlib import Path
 from typing import List
 
-from main.day14.docking_data import solve
+from main.day14.docking_data import solve_static, solve_floating
 from main.day14.instruction import Instruction
 
 
-def test_simple():
-    assert solve(read_input("data/test_input.txt")) == 165
+def test_static_simple():
+    assert solve_static(read_input("data/test_static_input.txt")) == 165
 
 
-def test_real():
-    assert solve(read_input("data/input.txt")) == 13556564111697
+def test_static_real():
+    assert solve_static(read_input("data/input.txt")) == 13556564111697
+
+
+def test_floating_simple():
+    assert solve_floating(read_input("data/test_floating_input.txt")) == 208
+
+
+def test_floating_real():
+    assert solve_floating(read_input("data/input.txt")) == 4173715962894
 
 
 def read_input(file_name) -> List[Instruction]:
