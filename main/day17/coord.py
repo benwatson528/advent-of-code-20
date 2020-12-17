@@ -6,3 +6,4 @@ class Coord:
     x: int
     y: int
     z: int
+    w: int = 0
