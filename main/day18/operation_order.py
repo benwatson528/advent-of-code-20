@@ -38,7 +38,7 @@ def reduce_equation_precedence(inner_equation: str) -> str:
         return str(inner_equation)
 
 
-def perform_calculation(equation: str):
+def perform_calculation(equation: str) -> str:
     regex = re.search(r"^(\d*) ([*+]) (\d*)", equation)
     op = operator.mul if regex.group(2) == "*" else operator.add
     ans = op(int(regex.group(1)), int(regex.group(3)))
