@@ -4,16 +4,19 @@ import re
 
 def solve(expression: str, addition_precedence: bool = False) -> int:
     if expression.count('(') > 0:
-        closing_bracket_idx = expression.find(')')
-        opening_bracket_idx = expression[:closing_bracket_idx].rfind('(')
-        inner_equation = expression[opening_bracket_idx + 1:closing_bracket_idx]
-        reduced = reduce_equation_precedence(inner_equation) if addition_precedence else reduce_equation_no_precedence(
-            inner_equation)
-        new_equation = expression[:opening_bracket_idx] + reduced + expression[closing_bracket_idx + 1:]
-        return solve(new_equation, addition_precedence)
+        return solve(reduce_brackets(addition_precedence, expression), addition_precedence)
+    else:
+        return int(reduce_equation_precedence(expression) if addition_precedence else reduce_equation_no_precedence(
+            expression))
 
-    return int(reduce_equation_precedence(expression) if addition_precedence else reduce_equation_no_precedence(
-        expression))
+
+def reduce_brackets(addition_precedence: bool, expression: str) -> str:
+    closing_bracket_idx = expression.find(')')
+    opening_bracket_idx = expression[:closing_bracket_idx].rfind('(')
+    inner_equation = expression[opening_bracket_idx + 1:closing_bracket_idx]
+    reduced = reduce_equation_precedence(inner_equation) if addition_precedence else reduce_equation_no_precedence(
+        inner_equation)
+    return expression[:opening_bracket_idx] + reduced + expression[closing_bracket_idx + 1:]
 
 
 def reduce_equation_no_precedence(inner_equation: str) -> str:
