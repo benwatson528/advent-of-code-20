@@ -20,10 +20,8 @@ def reduce_brackets(addition_precedence: bool, expression: str) -> str:
 
 
 def reduce_equation_no_precedence(inner_equation: str) -> str:
-    if inner_equation.count(" ") > 0:
-        return reduce_equation_no_precedence(perform_calculation(inner_equation))
-    else:
-        return str(inner_equation)
+    return reduce_equation_no_precedence(perform_calculation(inner_equation)) if inner_equation.count(" ") > 0 else str(
+        inner_equation)
 
 
 def reduce_equation_precedence(inner_equation: str) -> str:
