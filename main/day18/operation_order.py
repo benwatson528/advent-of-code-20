@@ -27,12 +27,10 @@ def reduce_equation_precedence(inner_equation: str) -> str:
     if inner_equation.count(" ") > 0:
         regex = list(re.finditer(r"(\d+) [+] (\d+)", inner_equation))
         if len(regex) == 0:
-            calculation = perform_calculation(inner_equation)
-            return str(reduce_equation_precedence(calculation))
+            return str(reduce_equation_precedence(perform_calculation(inner_equation)))
         else:
-            match = regex[0]
-            start = match.start()
-            end = match.end()
+            start = regex[0].start()
+            end = regex[0].end()
             ans = perform_calculation(inner_equation[start:end])
             reduced = inner_equation[:start] + ans + inner_equation[end:]
             return str(reduce_equation_precedence(reduced))
@@ -42,9 +40,6 @@ def reduce_equation_precedence(inner_equation: str) -> str:
 
 def perform_calculation(equation: str):
     regex = re.search(r"^(\d*) ([*+]) (\d*)", equation)
-    lhs = int(regex.group(1))
     op = operator.mul if regex.group(2) == "*" else operator.add
-    rhs = int(regex.group(3))
-    ans = op(lhs, rhs)
-    end_idx = regex.span(3)[1]
-    return str(ans) + equation[end_idx:]
+    ans = op(int(regex.group(1)), int(regex.group(3)))
+    return str(ans) + equation[regex.span(3)[1]:]
