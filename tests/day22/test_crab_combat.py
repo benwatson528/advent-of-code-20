@@ -6,7 +6,7 @@ from main.day22.crab_combat import solve
 
 
 def test_simple():
-    p1, p2 = read_input("data/test_input.txt")
+    p1, p2 = read_input("data/part_one_test_input.txt")
     assert solve(p1, p2) == 306
 
 
