@@ -3,8 +3,6 @@ import os
 from pathlib import Path
 from typing import Set
 
-import pytest
-
 from main.day11.seating_system import solve_adjacent, solve_visible, count_visible_tiles
 
 
