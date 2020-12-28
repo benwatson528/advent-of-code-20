@@ -13,11 +13,6 @@ def solve(r: Dict[str, str], part_2: bool) -> Set[str]:
     return set(build_possible_messages(rules['0'], ['']))
 
 
-def build_regex(start_rule_value: str, messages: List[str]) -> str:
-    return ""
-
-
-# Do we need a concept of finished messages vs in-progress messages? Not sure, what about ORs?
 def build_possible_messages(rule_value: str, suffixes: List[str]) -> List[str]:
     regex = re.findall(r'\d+', rule_value)
     if '"' in rule_value:
@@ -27,10 +22,8 @@ def build_possible_messages(rule_value: str, suffixes: List[str]) -> List[str]:
         return updated_suffixes
     elif '|' in rule_value:
         updated_suffixes = []
-        lhs_rules = " ".join(re.findall(r'\d+', rule_value.split('|')[0]))
-        rhs_rules = " ".join(re.findall(r'\d+', rule_value.split('|')[1]))
-        lhs_suffixes = build_possible_messages(lhs_rules, suffixes)
-        rhs_suffixes = build_possible_messages(rhs_rules, suffixes)
+        lhs_suffixes = build_possible_messages(' '.join(re.findall(r'\d+', rule_value.split('|')[0])), suffixes)
+        rhs_suffixes = build_possible_messages(' '.join(re.findall(r'\d+', rule_value.split('|')[1])), suffixes)
         for lhs in lhs_suffixes:
             updated_suffixes.append(lhs)
         for rhs in rhs_suffixes:

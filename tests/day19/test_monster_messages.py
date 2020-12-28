@@ -5,16 +5,30 @@ from typing import Dict
 from main.day19.monster_messages import solve
 
 
-def test_simple():
-    rules, messages = read_input("data/test_input.txt")
+def test_part_one_simple():
+    rules, messages = read_input("data/test_part_one_input.txt")
     possible_messages = solve(rules, False)
     valid_messages = [x for x in messages if x in possible_messages]
     assert len(valid_messages) == 2
 
 
-def test_real():
+def test_part_one_real():
     rules, messages = read_input("data/input.txt")
     possible_messages = solve(rules, False)
+    valid_messages = [x for x in messages if x in possible_messages]
+    assert len(valid_messages) == 208
+
+
+def test_part_two_simple():
+    rules, messages = read_input("data/test_part_two_input.txt")
+    possible_messages = solve(rules, True)
+    valid_messages = [x for x in messages if x in possible_messages]
+    assert len(valid_messages) == 2
+
+
+def test_part_two_real():
+    rules, messages = read_input("data/input.txt")
+    possible_messages = solve(rules, True)
     valid_messages = [x for x in messages if x in possible_messages]
     assert len(valid_messages) == 208
 
