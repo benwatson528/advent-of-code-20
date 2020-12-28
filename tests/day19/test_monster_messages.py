@@ -7,14 +7,14 @@ from main.day19.monster_messages import solve
 
 def test_simple():
     rules, messages = read_input("data/test_input.txt")
-    possible_messages = solve(rules)
+    possible_messages = solve(rules, False)
     valid_messages = [x for x in messages if x in possible_messages]
     assert len(valid_messages) == 2
 
 
 def test_real():
     rules, messages = read_input("data/input.txt")
-    possible_messages = solve(rules)
+    possible_messages = solve(rules, False)
     valid_messages = [x for x in messages if x in possible_messages]
     assert len(valid_messages) == 208
 
