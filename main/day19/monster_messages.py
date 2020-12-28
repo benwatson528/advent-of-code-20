@@ -16,10 +16,7 @@ def solve(r: Dict[str, str], part_2: bool) -> Set[str]:
 def build_possible_messages(rule_value: str, suffixes: List[str]) -> List[str]:
     regex = re.findall(r'\d+', rule_value)
     if '"' in rule_value:
-        updated_suffixes = []
-        for suffix in suffixes:
-            updated_suffixes.append(suffix + rule_value[1])
-        return updated_suffixes
+        return [s + rule_value[1] for s in suffixes]
     elif '|' in rule_value:
         updated_suffixes = []
         lhs_suffixes = build_possible_messages(' '.join(re.findall(r'\d+', rule_value.split('|')[0])), suffixes)
