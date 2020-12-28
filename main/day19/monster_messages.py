@@ -24,12 +24,17 @@ def build_possible_messages(rule_value: str, suffixes: List[str]) -> List[str]:
         return updated_suffixes
     elif '|' in rule_value:
         updated_suffixes = []
-        if len(regex) == 4:
-            lhs_suffixes = build_possible_messages(regex[0] + " " + regex[1], suffixes)
-            rhs_suffixes = build_possible_messages(regex[2] + " " + regex[3], suffixes)
+        if len(regex) == 6:
+            lhs_rules = regex[0] + " " + regex[1] + " " + regex[2]
+            rhs_rules = regex[3] + " " + regex[4] + " " + regex[5]
+        elif len(regex) == 4:
+            lhs_rules = regex[0] + " " + regex[1]
+            rhs_rules = regex[2] + " " + regex[3]
         else:
-            lhs_suffixes = build_possible_messages(regex[0], suffixes)
-            rhs_suffixes = build_possible_messages(regex[1], suffixes)
+            lhs_rules = regex[0]
+            rhs_rules = regex[1]
+        lhs_suffixes = build_possible_messages(lhs_rules, suffixes)
+        rhs_suffixes = build_possible_messages(rhs_rules, suffixes)
         for lhs in lhs_suffixes:
             updated_suffixes.append(lhs)
         for rhs in rhs_suffixes:
