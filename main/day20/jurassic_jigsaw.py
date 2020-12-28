@@ -1,18 +1,26 @@
+import math
 from typing import Dict, List, Set
 
 
-def solve(raw_tiles: Dict[int, List[str]]) -> Set[int]:
+def solve_corners(raw_tiles: Dict[int, List[str]]) -> Set[int]:
     all_sides = get_all_sides(raw_tiles)
-    corner_tiles = find_corner_tiles(all_sides)
+    return find_outer_edge_tiles(all_sides, 2)
+
+
+def solve_loch_ness(raw_tiles: Dict[int, List[str]]) -> Set[int]:
+    all_sides = get_all_sides(raw_tiles)
+    corner_tiles = solve_corners(raw_tiles)
+    # Start at one corner and build from it, then figure out which other corner joins onto it
+    build_edges(corner_tiles, raw_tiles, all_sides)
     return corner_tiles
 
 
-def find_corner_tiles(tiles: Dict[int, List[str]]) -> Set[int]:
+def find_outer_edge_tiles(tiles: Dict[int, List[str]], threshold: int) -> Set[int]:
     corner_tiles = set()
     for tile_id, sides in tiles.items():
         # Only compare against the original 4 sides - the flipped sides are accounted for in the main tiles list
         num_unique_sides = sum(1 for i in range(4) if is_unique_side(sides[i], tile_id, tiles))
-        if num_unique_sides == 2:
+        if num_unique_sides == threshold:
             corner_tiles.add(tile_id)
     return corner_tiles
 
@@ -45,3 +53,15 @@ def get_all_sides(tiles: Dict[int, List[str]]) -> Dict[int, List[str]]:
         all_sides[tile_id] = [left_side, right_side, top, bottom, left_side_reversed, right_side_reversed, top_reversed,
                               bottom_reversed]
     return all_sides
+
+
+def build_edges(corner_tiles: Set[int], raw_tiles: Dict[int, List[str]], all_sides: Dict[int, List[str]]) -> List:
+    square_dimension = int(math.sqrt(len(raw_tiles)))
+    edge_tile_ids = find_outer_edge_tiles(all_sides, 1)
+    # Find edge tiles that match the first corner
+    edge_tiles = {k: v for k, v in raw_tiles.items() if k in edge_tile_ids}
+    first_corner = list(corner_tiles)[0]
+
+    return []
+
+# We need a side that has an edge on one side and matches one side of the corner on the other. Start populating the grid properly here?
