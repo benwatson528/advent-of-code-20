@@ -28,10 +28,3 @@ def find_destination_cup(current_cup: int, moved_cups: List[int], num_cups: int)
         if destination_cup < 1:
             destination_cup = num_cups
     return destination_cup
-
-
-def follow_n_cups(current_cup: int, cups: Dict[int, int], n: int) -> int:
-    next_cup = current_cup
-    for _ in range(n - 1):
-        next_cup = cups[next_cup]
-    return cups[next_cup]
