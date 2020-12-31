@@ -1,21 +1,27 @@
 import math
 from typing import Dict, List, Set
 
+Tiles = Dict[int, List[str]]
 
-def solve_corners(raw_tiles: Dict[int, List[str]]) -> Set[int]:
+ANY_VALUE = "any"
+UNIQUE_VALUE = "unique"
+
+puzzle_size_length = 0
+
+
+def solve_corners(raw_tiles: Tiles) -> Set[int]:
     all_sides = get_all_sides(raw_tiles)
     return find_outer_edge_tiles(all_sides, 2)
 
 
-def solve_loch_ness(raw_tiles: Dict[int, List[str]]) -> Set[int]:
+def solve_loch_ness(raw_tiles: Tiles) -> List[str]:
+    global puzzle_size_length
+    puzzle_size_length = int(math.sqrt(len(raw_tiles)))
     all_sides = get_all_sides(raw_tiles)
-    corner_tiles = solve_corners(raw_tiles)
-    # Start at one corner and build from it, then figure out which other corner joins onto it
-    build_edges(corner_tiles, raw_tiles, all_sides)
-    return corner_tiles
+    return build_grid(raw_tiles, all_sides, 0, 0, [" " * 10 * puzzle_size_length] * puzzle_size_length * 10)
 
 
-def find_outer_edge_tiles(tiles: Dict[int, List[str]], threshold: int) -> Set[int]:
+def find_outer_edge_tiles(tiles: Tiles, threshold: int) -> Set[int]:
     corner_tiles = set()
     for tile_id, sides in tiles.items():
         # Only compare against the original 4 sides - the flipped sides are accounted for in the main tiles list
@@ -29,7 +35,7 @@ def get_column(tile: List[str], idx: int) -> List[str]:
     return [row[idx] for row in tile]
 
 
-def is_unique_side(side: str, tile_id: int, tiles: Dict[int, List[str]]) -> bool:
+def is_unique_side(side: str, tile_id: int, tiles: Tiles) -> bool:
     for iter_tile_id, iter_sides in tiles.items():
         if iter_tile_id == tile_id:
             continue
@@ -39,7 +45,7 @@ def is_unique_side(side: str, tile_id: int, tiles: Dict[int, List[str]]) -> bool
     return True
 
 
-def get_all_sides(tiles: Dict[int, List[str]]) -> Dict[int, List[str]]:
+def get_all_sides(tiles: Tiles) -> Tiles:
     all_sides = {}
     for tile_id, tile in tiles.items():
         left_side = ''.join(get_column(tile, 0))
@@ -55,13 +61,159 @@ def get_all_sides(tiles: Dict[int, List[str]]) -> Dict[int, List[str]]:
     return all_sides
 
 
-def build_edges(corner_tiles: Set[int], raw_tiles: Dict[int, List[str]], all_sides: Dict[int, List[str]]) -> List:
-    square_dimension = int(math.sqrt(len(raw_tiles)))
-    edge_tile_ids = find_outer_edge_tiles(all_sides, 1)
-    # Find edge tiles that match the first corner
-    edge_tiles = {k: v for k, v in raw_tiles.items() if k in edge_tile_ids}
-    first_corner = list(corner_tiles)[0]
-
+def build_grid(tiles: Tiles, all_sides: Tiles, starting_i: int, starting_j: int, final_grid: List[str]) -> List[str]:
+    for j in range(starting_j, puzzle_size_length):
+        for i in range(starting_i, puzzle_size_length):
+            sides_to_fit = {"top": find_top_bound(final_grid, i, j), "bottom": find_bottom_bound(final_grid, i, j),
+                            "left": find_left_bound(final_grid, i, j), "right": find_right_bound(final_grid, i, j)}
+            matching_tiles = find_matching_tiles(sides_to_fit, tiles, all_sides)
+            if len(matching_tiles) != 0:
+                if len(matching_tiles) > 1:
+                    print(f"matching tiles = {matching_tiles.keys()}")
+                for k, v in matching_tiles.items():
+                    print(f"Adding tile {k} to grid at coordinate ({i}, {j})")
+                    final_grid = add_tile_to_grid(v, i, j, final_grid)
+                    updated_tiles = tiles.copy()
+                    updated_tiles.pop(k)
+                    if i == puzzle_size_length - 1:
+                        new_grid = build_grid(updated_tiles, all_sides, 0, j + 1, final_grid)
+                    else:
+                        new_grid = build_grid(updated_tiles, all_sides, i + 1, j, final_grid)
+                    if final_grid[-1][-1] != " ":
+                        return new_grid
     return []
 
-# We need a side that has an edge on one side and matches one side of the corner on the other. Start populating the grid properly here?
+
+def find_right_bound(final_grid: List[str], i: int, j: int) -> str:
+    if i == puzzle_size_length - 1:
+        return UNIQUE_VALUE
+    else:
+        right_border = ''.join(get_column(final_grid, (i * 10) + 10)[j * 10:(j * 10) + 10])
+        return ANY_VALUE if right_border.isspace() else right_border
+
+
+def find_left_bound(final_grid: List[str], i: int, j: int) -> str:
+    if i == 0:
+        return UNIQUE_VALUE
+    else:
+        left_border = ''.join(get_column(final_grid, (i * 10) - 1)[(j * 10):(j * 10) + 10])
+        return ANY_VALUE if left_border.isspace() else left_border
+
+
+def find_top_bound(final_grid: List[str], i: int, j: int) -> str:
+    if j == 0:
+        return UNIQUE_VALUE
+    else:
+        top_border = final_grid[(j * 10) - 1][(i * 10):(i * 10) + 10]
+        return ANY_VALUE if top_border.isspace() else top_border
+
+
+def find_bottom_bound(final_grid: List[str], i: int, j: int) -> str:
+    if j == puzzle_size_length - 1:
+        return UNIQUE_VALUE
+    else:
+        bottom_border = final_grid[(j * 10) + 10][i * 10:(i * 10) + 10]
+        return ANY_VALUE if bottom_border.isspace() else bottom_border
+
+
+def add_tile_to_grid(tile: List[str], i: int, j: int, final_grid: List[str]) -> List[str]:
+    for y in range(10):
+        row_to_update = (j * 10) + y
+        before = final_grid[(j * 10) + y][:i * 10]
+        during = tile[y]
+        after = final_grid[(j * 10) + y][(i * 10) + 10:]
+        final_grid[row_to_update] = before + during + after
+    return final_grid
+
+
+def find_matching_tiles(sides_to_fit: Dict[str, str], tiles: Tiles, all_sides: Tiles) -> Tiles:
+    matching_tiles = {}
+    for tile_id, tile in tiles.items():
+        for transposed in transpose_tile(tile):
+            if sides_match(sides_to_fit, transposed, tile_id, all_sides):
+                matching_tiles[tile_id] = transposed
+    return matching_tiles
+
+
+# All the ways that a tile can be transposed:
+# https://forums.ni.com/t5/LabVIEW/mirroring-and-flipping-a-matrix/td-p/833083?profile.language=en
+def transpose_tile(tile: List[str]) -> List[List[str]]:
+    rotated_90 = rotate_90(tile)
+    rotated_180 = rotate_90(rotated_90)
+    rotated_270 = rotate_90(rotated_180)
+    vertical_flip = [i for i in reversed(tile)]
+    transposed = rotate_90(vertical_flip)
+    horizontal_flip = rotate_90(transposed)
+    diagonal_flip = rotate_90(horizontal_flip)
+    return [tile, rotated_90, rotated_180, rotated_270, vertical_flip, horizontal_flip, diagonal_flip, transposed]
+
+
+def sides_match(sides_to_fit: Dict[str, str], transposed: List[str], tile_id: int, all_sides: Tiles) -> bool:
+    if not match_top(all_sides, sides_to_fit, tile_id, transposed):
+        return False
+    if not match_bottom(all_sides, sides_to_fit, tile_id, transposed):
+        return False
+    if not match_left(all_sides, sides_to_fit, tile_id, transposed):
+        return False
+    if not match_right(all_sides, sides_to_fit, tile_id, transposed):
+        return False
+    return True
+
+
+def match_top(all_sides: Tiles, sides_to_fit: Dict[str, str], tile_id: int, transposed: List[str]) -> bool:
+    if sides_to_fit["top"] == UNIQUE_VALUE:
+        return is_unique_side(transposed[0], tile_id, all_sides)
+    elif sides_to_fit["top"] == ANY_VALUE:
+        return True
+    else:
+        return transposed[0] == sides_to_fit["top"]
+
+
+def match_bottom(all_sides: Tiles, sides_to_fit: Dict[str, str], tile_id: int, transposed: List[str]) -> bool:
+    if sides_to_fit["bottom"] == UNIQUE_VALUE:
+        return is_unique_side(transposed[-1], tile_id, all_sides)
+    elif sides_to_fit["bottom"] == ANY_VALUE:
+        return True
+    else:
+        return transposed[-1] == sides_to_fit["bottom"]
+
+
+def match_left(all_sides: Tiles, sides_to_fit: Dict[str, str], tile_id: int, transposed: List[str]) -> bool:
+    left_col = ''.join(get_column(transposed, 0))
+    if sides_to_fit["left"] == UNIQUE_VALUE:
+        return is_unique_side(left_col, tile_id, all_sides)
+    elif sides_to_fit["left"] == ANY_VALUE:
+        return True
+    else:
+        return left_col == sides_to_fit["left"]
+
+
+def match_right(all_sides: Tiles, sides_to_fit: Dict[str, str], tile_id: int, transposed: List[str]) -> bool:
+    right_col = ''.join(get_column(transposed, -1))
+    if sides_to_fit["right"] == UNIQUE_VALUE:
+        return is_unique_side(right_col, tile_id, all_sides)
+    elif sides_to_fit["right"] == ANY_VALUE:
+        return True
+    else:
+        return right_col == sides_to_fit["right"]
+
+
+def rotate_90(tile: List[str]) -> List[str]:
+    return [''.join(row) for row in zip(*reversed(tile))]
+
+
+def print_grid(final_grid: List[str]):
+    print()
+    pixel_dimension = len(final_grid)
+    for i in range(pixel_dimension):
+        print()
+        if i % 10 == 0:
+            print("-" * (pixel_dimension + (pixel_dimension // 10) + 1))
+        for j in range(pixel_dimension):
+            if j % 10 == 0:
+                print("|", end='')
+            print(final_grid[i][j], end='')
+            if j == pixel_dimension - 1:
+                print("|", end='')
+    print()
+    print("-" * (pixel_dimension + (pixel_dimension // 10) + 1))
