@@ -3,6 +3,11 @@ from typing import Dict, List, Set
 
 import regex as re
 
+RIGHT = "right"
+LEFT = "left"
+BOTTOM = "bottom"
+TOP = "top"
+
 Tiles = Dict[int, List[str]]
 
 ANY_VALUE = "any"
@@ -109,8 +114,8 @@ def build_grid(tiles: Tiles, all_sides: Tiles) -> List[str]:
     final_grid = [" " * 10 * puzzle_size_length] * puzzle_size_length * 10
     for j in range(0, puzzle_size_length):
         for i in range(0, puzzle_size_length):
-            sides_to_fit = {"top": find_top_bound(final_grid, i, j), "bottom": find_bottom_bound(final_grid, i, j),
-                            "left": find_left_bound(final_grid, i, j), "right": find_right_bound(final_grid, i, j)}
+            sides_to_fit = {TOP: find_top_bound(final_grid, i, j), BOTTOM: find_bottom_bound(final_grid, i, j),
+                            LEFT: find_left_bound(final_grid, i, j), RIGHT: find_right_bound(final_grid, i, j)}
             matching_tiles = find_matching_tiles(sides_to_fit, tiles, all_sides)
             if len(matching_tiles) == 0:
                 return []
@@ -199,41 +204,41 @@ def sides_match(sides_to_fit: Dict[str, str], transposed: List[str], tile_id: in
 
 
 def match_top(all_sides: Tiles, sides_to_fit: Dict[str, str], tile_id: int, transposed: List[str]) -> bool:
-    if sides_to_fit["top"] == UNIQUE_VALUE:
+    if sides_to_fit[TOP] == UNIQUE_VALUE:
         return is_unique_side(transposed[0], tile_id, all_sides)
-    elif sides_to_fit["top"] == ANY_VALUE:
+    elif sides_to_fit[TOP] == ANY_VALUE:
         return True
     else:
-        return transposed[0] == sides_to_fit["top"]
+        return transposed[0] == sides_to_fit[TOP]
 
 
 def match_bottom(all_sides: Tiles, sides_to_fit: Dict[str, str], tile_id: int, transposed: List[str]) -> bool:
-    if sides_to_fit["bottom"] == UNIQUE_VALUE:
+    if sides_to_fit[BOTTOM] == UNIQUE_VALUE:
         return is_unique_side(transposed[-1], tile_id, all_sides)
-    elif sides_to_fit["bottom"] == ANY_VALUE:
+    elif sides_to_fit[BOTTOM] == ANY_VALUE:
         return True
     else:
-        return transposed[-1] == sides_to_fit["bottom"]
+        return transposed[-1] == sides_to_fit[BOTTOM]
 
 
 def match_left(all_sides: Tiles, sides_to_fit: Dict[str, str], tile_id: int, transposed: List[str]) -> bool:
     left_col = ''.join(get_column(transposed, 0))
-    if sides_to_fit["left"] == UNIQUE_VALUE:
+    if sides_to_fit[LEFT] == UNIQUE_VALUE:
         return is_unique_side(left_col, tile_id, all_sides)
-    elif sides_to_fit["left"] == ANY_VALUE:
+    elif sides_to_fit[LEFT] == ANY_VALUE:
         return True
     else:
-        return left_col == sides_to_fit["left"]
+        return left_col == sides_to_fit[LEFT]
 
 
 def match_right(all_sides: Tiles, sides_to_fit: Dict[str, str], tile_id: int, transposed: List[str]) -> bool:
     right_col = ''.join(get_column(transposed, -1))
-    if sides_to_fit["right"] == UNIQUE_VALUE:
+    if sides_to_fit[RIGHT] == UNIQUE_VALUE:
         return is_unique_side(right_col, tile_id, all_sides)
-    elif sides_to_fit["right"] == ANY_VALUE:
+    elif sides_to_fit[RIGHT] == ANY_VALUE:
         return True
     else:
-        return right_col == sides_to_fit["right"]
+        return right_col == sides_to_fit[RIGHT]
 
 
 def rotate_90(tile: List[str]) -> List[str]:
