@@ -5,8 +5,6 @@ from collections import defaultdict
 from pathlib import Path
 from typing import List, Dict
 
-import pytest
-
 from main.day20.jurassic_jigsaw import solve_corners, solve_loch_ness
 
 
@@ -21,16 +19,12 @@ def test_corners_real():
     assert math.prod(corner_tiles) == 15003787688423
 
 
-@pytest.mark.skip(reason="Fails")
 def test_loch_ness_simple():
-    all_tiles = solve_loch_ness(read_input("data/test_input.txt"))
-    assert math.prod(all_tiles) == 20899048083289
+    assert solve_loch_ness(read_input("data/test_input.txt")) == 273
 
 
-@pytest.mark.skip(reason="Fails")
 def test_loch_ness_real():
-    corner_tiles = solve_loch_ness(read_input("data/input.txt"))
-    assert math.prod(corner_tiles) == 15003787688423
+    assert solve_loch_ness(read_input("data/input.txt")) == 1705
 
 
 def read_input(file_name: str) -> Dict[int, List[str]]:

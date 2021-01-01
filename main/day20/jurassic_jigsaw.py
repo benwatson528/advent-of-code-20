@@ -1,6 +1,8 @@
 import math
 from typing import Dict, List, Set
 
+import regex as re
+
 Tiles = Dict[int, List[str]]
 
 ANY_VALUE = "any"
@@ -14,11 +16,53 @@ def solve_corners(raw_tiles: Tiles) -> Set[int]:
     return find_outer_edge_tiles(all_sides, 2)
 
 
-def solve_loch_ness(raw_tiles: Tiles) -> List[str]:
+def solve_loch_ness(raw_tiles: Tiles) -> int:
     global puzzle_size_length
     puzzle_size_length = int(math.sqrt(len(raw_tiles)))
     all_sides = get_all_sides(raw_tiles)
-    return build_grid(raw_tiles, all_sides, 0, 0, [" " * 10 * puzzle_size_length] * puzzle_size_length * 10)
+    final_grid = build_grid(raw_tiles, all_sides)
+    borderless = remove_borders(final_grid)
+    num_loch_ness = find_loch_ness(borderless)
+    loch_ness_pixels = 15
+    num_hashes = sum(row.count('#') for row in borderless)
+    roughness = num_hashes - (num_loch_ness * loch_ness_pixels)
+    return roughness
+
+
+def remove_borders(final_grid: List[str]) -> List[str]:
+    borderless_grid = []
+    current_row = 0
+    for j in range(puzzle_size_length * 10):
+        j_s = str(j)
+        if j_s.endswith("0") or j_s.endswith("9"):
+            continue
+        else:
+            borderless_grid.append("")
+        for i in range(puzzle_size_length * 10):
+            i_s = str(i)
+            if not i_s.endswith("0") and not i_s.endswith("9"):
+                borderless_grid[current_row] += final_grid[j][i]
+        current_row += 1
+    return borderless_grid
+
+
+def find_loch_ness(grid: List[str]) -> int:
+    loch_ness = r""".{18}#.{1}
+#.{4}##.{4}##.{4}###
+.{1}#.{2}#.{2}#.{2}#.{2}#.{2}#.{3}
+""".split("\n")
+    num_loch_ness = 0
+    for transposition in transpose_tile(grid):
+        for j in range(len(transposition) - 2):
+            loch_ness_top_starts = set(m.start() for m in re.finditer(loch_ness[0], transposition[j], overlapped=True))
+            loch_ness_middle_starts = set(
+                m.start() for m in re.finditer(loch_ness[1], transposition[j + 1], overlapped=True))
+            loch_ness_bottom_starts = set(
+                m.start() for m in re.finditer(loch_ness[2], transposition[j + 2], overlapped=True))
+            for top_start in loch_ness_top_starts:
+                if top_start in loch_ness_middle_starts and top_start in loch_ness_bottom_starts:
+                    num_loch_ness += 1
+    return num_loch_ness
 
 
 def find_outer_edge_tiles(tiles: Tiles, threshold: int) -> Set[int]:
@@ -61,27 +105,21 @@ def get_all_sides(tiles: Tiles) -> Tiles:
     return all_sides
 
 
-def build_grid(tiles: Tiles, all_sides: Tiles, starting_i: int, starting_j: int, final_grid: List[str]) -> List[str]:
-    for j in range(starting_j, puzzle_size_length):
-        for i in range(starting_i, puzzle_size_length):
+def build_grid(tiles: Tiles, all_sides: Tiles) -> List[str]:
+    final_grid = [" " * 10 * puzzle_size_length] * puzzle_size_length * 10
+    for j in range(0, puzzle_size_length):
+        for i in range(0, puzzle_size_length):
             sides_to_fit = {"top": find_top_bound(final_grid, i, j), "bottom": find_bottom_bound(final_grid, i, j),
                             "left": find_left_bound(final_grid, i, j), "right": find_right_bound(final_grid, i, j)}
             matching_tiles = find_matching_tiles(sides_to_fit, tiles, all_sides)
-            if len(matching_tiles) != 0:
-                if len(matching_tiles) > 1:
-                    print(f"matching tiles = {matching_tiles.keys()}")
-                for k, v in matching_tiles.items():
-                    print(f"Adding tile {k} to grid at coordinate ({i}, {j})")
-                    final_grid = add_tile_to_grid(v, i, j, final_grid)
-                    updated_tiles = tiles.copy()
-                    updated_tiles.pop(k)
-                    if i == puzzle_size_length - 1:
-                        new_grid = build_grid(updated_tiles, all_sides, 0, j + 1, final_grid)
-                    else:
-                        new_grid = build_grid(updated_tiles, all_sides, i + 1, j, final_grid)
-                    if final_grid[-1][-1] != " ":
-                        return new_grid
-    return []
+            if len(matching_tiles) == 0:
+                return []
+            else:
+                # We can safely take the first one because there is only one possible tile for each position
+                tile_id, tile = next(iter(matching_tiles.items()))
+                final_grid = add_tile_to_grid(tile, i, j, final_grid)
+                tiles.pop(tile_id)
+    return final_grid
 
 
 def find_right_bound(final_grid: List[str], i: int, j: int) -> str:
